@@ -12,7 +12,6 @@ import { UserEntity } from "./user.entity";
 
 @Entity({
   name: "note",
-  // schema: "teste",
 })
 export class NoteEntity {
   @PrimaryGeneratedColumn("uuid")
