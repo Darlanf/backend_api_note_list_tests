@@ -92,8 +92,6 @@ export class NoteController {
         note
       );
 
-      // user?.addNote(note);
-
       return SuccessResponse.created(
         res,
         "Note successfully created",
@@ -111,23 +109,6 @@ export class NoteController {
     try {
       const { userId, noteId } = req.params;
 
-      // const database = new UserDatabase();
-      // const user = database.getUserId(userId);
-
-      // const noteList = user!.notes;
-
-      // const noteIndex = noteList.findIndex(
-      //   (note) => note.id === noteId
-      // );
-
-      // if (noteIndex < 0) {
-      //   return RequestError.notFound(res, "Note");
-      // }
-
-      // const noteDeleted = noteList.splice(
-      //   noteIndex!,
-      //   1
-      // );
       const database = new NoteDatabase();
       const result = await database.delete(
         noteId
@@ -171,29 +152,11 @@ export class NoteController {
         data
       );
 
-      // const noteList = user?.notes;
-      // const note = noteList?.find(
-      //   (note) => note.id === noteId
-      // );
-
-      // if (title) {
-      //   note!.title = title;
-      // }
-
-      // if (description) {
-      //   note!.description = description;
-      // }
-
-      // if (filed !== undefined) {
-      //   note!.filed = filed;
-      // }
-
       return SuccessResponse.ok(
         res,
         "Note successfully updated",
         {
           result,
-          // noteList
         }
       );
     } catch (error: any) {

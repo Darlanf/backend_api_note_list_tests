@@ -52,9 +52,7 @@ export class UserDatabase {
       await this.repository.findOneBy({
         id,
       });
-    // await DatabaseConnection.connection.query(
-    //   `select * from teste.user where id = '${id}'`
-    // );
+
     if (!result) {
       return null;
     }
@@ -80,9 +78,6 @@ export class UserDatabase {
   public async delete(
     id: string
   ): Promise<number> {
-    // await DatabaseConnection.connection.query(
-    //   `delete from teste.user where id = '${id}'`
-    // );
     const result = await this.repository.delete({
       id,
     });
@@ -94,13 +89,6 @@ export class UserDatabase {
     id: string,
     data?: any
   ): Promise<number> {
-    // let query = `update teste.user `;
-    // query += `set username = '${data.username}', password = '${data.password}', updated_at = current_timestamp `;
-    // query += `where id = '${id}' `;
-    // await DatabaseConnection.connection.query(
-    //   query
-    // );
-
     const result = await this.repository.update(
       {
         id,

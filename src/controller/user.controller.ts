@@ -130,16 +130,6 @@ export class UserController {
         return RequestError.notFound(res, "User");
       }
 
-      // const userIndex =
-      //   database.getUserIndex(userId);
-
-      // if (userIndex < 0) {
-      //   return RequestError.notFound(res, "User");
-      // }
-
-      // const userDeleted =
-      //   database.delete(userIndex);
-
       return SuccessResponse.ok(
         res,
         "User successfully deleted",
