@@ -8,9 +8,13 @@ export class NoteDatabase {
       NoteEntity
     );
 
-  public async list(title?: string) {
+  public async list(
+    userId: string,
+    title?: string
+  ) {
     const result = await this.repository.find({
       where: {
+        idUser: userId,
         title,
       },
       relations: ["user"],

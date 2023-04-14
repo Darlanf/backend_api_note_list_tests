@@ -18,6 +18,7 @@ export class NoteController {
 
       const database = new NoteDatabase();
       let noteList = await database.list(
+        userId,
         title ? String(title) : undefined
       );
 
