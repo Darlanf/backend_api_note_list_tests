@@ -3,6 +3,16 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+let entities = "src/database/entities/**/*.ts";
+let migrations =
+  "src/database/migrations/**/*.ts";
+
+if (process.env.DB_SYS != "dev") {
+  entities = "build/database/entities/**/*.js";
+  migrations =
+    "build/database/migrations/**/*.js";
+}
+
 export default new DataSource({
   type: "postgres",
   port: 5432,
@@ -14,7 +24,7 @@ export default new DataSource({
     rejectUnauthorized: false,
   },
   synchronize: false,
-  entities: ["src/database/entities/**/*.ts"],
-  migrations: ["src/database/migrations/**/*.ts"],
+  entities: [entities],
+  migrations: [migrations],
   schema: "avaliacao",
 });
