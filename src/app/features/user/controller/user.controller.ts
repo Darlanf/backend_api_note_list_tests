@@ -17,14 +17,16 @@ export class UserController {
         req.body;
 
       const result =
-        await new CreateUserUsecase().execute(
-          req.body
-        );
+        await new CreateUserUsecase().execute({
+          username,
+          email,
+          password,
+        });
 
       return SuccessResponse.created(
         res,
         "Usuario criado com sucesso",
-        result
+        result.data.toJson()
       );
     } catch (error: any) {
       return ServerError.genericError(res, error);
@@ -50,34 +52,7 @@ export class UserController {
     }
   }
 
-  public async login(
-    req: Request,
-    res: Response
-  ) {
-    try {
-      const { email, password } = req.body;
-
-      const database = new UserRepository();
-      let user = await database.login(
-        email,
-        password
-      );
-
-      if (!user) {
-        return RequestError.notFound(res, "User");
-      }
-
-      return SuccessResponse.ok(
-        res,
-        "Login successfully done",
-        user?.toJson()
-      );
-    } catch (error: any) {
-      return ServerError.genericError(res, error);
-    }
-  }
-
-  public async listOne(
+  public async getOne(
     req: Request,
     res: Response
   ) {

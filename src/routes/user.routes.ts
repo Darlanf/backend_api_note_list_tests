@@ -3,6 +3,7 @@ import { NoteController } from "../app/features/note/controller/note.controller"
 import { UserController } from "../app/features/user/controller/user.controller";
 import { NoteValidatorMiddleware } from "../middlewares/note.validator.middleware";
 import { UserValidatorMiddleware } from "../middlewares/user.validator.middleware";
+import { LoginController } from "../app/features/login/controller/login.controller";
 
 // http://localhost:3333/user
 export const userRoutes = () => {
@@ -22,7 +23,7 @@ export const userRoutes = () => {
   app.post(
     "/login",
     // UserValidatorMiddleware.isLoginValid,
-    new UserController().login
+    new LoginController().login
   );
 
   //   GET http://localhost:3333/user - permite listar usuários
@@ -31,7 +32,7 @@ export const userRoutes = () => {
   //   GET http://localhost:3333/user - permite listar usuários
   app.get(
     "/:userId",
-    new UserController().listOne
+    new UserController().getOne
   );
 
   // DELETE http://localhost:3333/user/:userId - Permite deletar um usuário

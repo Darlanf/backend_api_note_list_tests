@@ -9,7 +9,7 @@ export class ListUserUsecase {
       "listaDeUsuarios"
     );
 
-    if (userList) {
+    if (userList !== null) {
       return {
         ok: true,
         code: 200,
