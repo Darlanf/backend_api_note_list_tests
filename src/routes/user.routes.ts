@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { NoteController } from "../controller/note.controller";
-import { UserController } from "../controller/user.controller";
+import { NoteController } from "../app/features/note/controller/note.controller";
+import { UserController } from "../app/features/user/controller/user.controller";
 import { NoteValidatorMiddleware } from "../middlewares/note.validator.middleware";
 import { UserValidatorMiddleware } from "../middlewares/user.validator.middleware";
 

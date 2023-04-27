@@ -1,10 +1,10 @@
-import { DatabaseConnection } from "../config/databse.connection";
+import { TypeormConnection } from "../../../../main/database/typeorm.connection";
 import { NoteEntity } from "../entities/note.entity";
-import { Note } from "../../models/note.model";
+import { Note } from "../../../models/note.model";
 
 export class NoteDatabase {
   private repository =
-    DatabaseConnection.connection.getRepository(
+    TypeormConnection.connection.getRepository(
       NoteEntity
     );
 

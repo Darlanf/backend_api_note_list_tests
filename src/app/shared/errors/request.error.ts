@@ -21,6 +21,16 @@ export class RequestError {
     });
   }
 
+  public static invalidData(
+    res: Response,
+    msg: string
+  ) {
+    return res.status(400).send({
+      ok: false,
+      msg,
+    });
+  }
+
   public static unauthorized(res: Response) {
     return res.status(401).send({
       ok: false,

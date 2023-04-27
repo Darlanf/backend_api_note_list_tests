@@ -1,10 +1,10 @@
 import { User } from "../../models/user.model";
-import { DatabaseConnection } from "../config/databse.connection";
+import { TypeormConnection } from "../../../../main/database/typeorm.connection";
 import { UserEntity } from "../entities/user.entity";
 
 export class UserDatabase {
   private repository =
-    DatabaseConnection.connection.getRepository(
+    TypeormConnection.connection.getRepository(
       UserEntity
     );
 

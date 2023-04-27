@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { UserDatabase } from "../database/repositories/user.database";
-import { ServerError } from "../errors/generic.error";
-import { RequestError } from "../errors/request.error";
-import { Note } from "../models/note.model";
+import { UserDatabase } from "../../../shared/database/repositories/user.database";
+import { ServerError } from "../../../shared/errors/generic.error";
+import { RequestError } from "../../../shared/errors/request.error";
+import { Note } from "../../../models/note.model";
 import { User } from "../models/user.model";
-import { SuccessResponse } from "../util/success.response";
-import { NoteDatabase } from "../database/repositories/note.database";
+import { SuccessResponse } from "../../../shared/util/success.response";
+import { NoteDatabase } from "../../../shared/database/repositories/note.database";
 
 export class NoteController {
   public async listAll(
@@ -29,7 +29,7 @@ export class NoteController {
           filed?.toString().toLowerCase() ===
           "true";
         noteList = noteList.filter(
-          (note) => note.filed === isFiled
+          (note: any) => note.filed === isFiled
         );
       }
 

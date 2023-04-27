@@ -3,10 +3,10 @@ import {
   Request,
   Response,
 } from "express";
-import { UserDatabase } from "../database/repositories/user.database";
-import { ServerError } from "../errors/generic.error";
-import { RequestError } from "../errors/request.error";
-import { NoteDatabase } from "../database/repositories/note.database";
+import { UserDatabase } from "../app/shared/database/repositories/user.database";
+import { ServerError } from "../app/shared/errors/generic.error";
+import { RequestError } from "../app/shared/errors/request.error";
+import { NoteDatabase } from "../app/shared/database/repositories/note.database";
 
 export class NoteValidatorMiddleware {
   public static userExist(

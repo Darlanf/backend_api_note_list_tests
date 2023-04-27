@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { UserDatabase } from "../database/repositories/user.database";
-import { ServerError } from "../errors/generic.error";
-import { RequestError } from "../errors/request.error";
+import { UserDatabase } from "../../../shared/database/repositories/user.database";
+import { ServerError } from "../../../shared/errors/generic.error";
+import { RequestError } from "../../../shared/errors/request.error";
 import { User } from "../models/user.model";
-import { SuccessResponse } from "../util/success.response";
+import { SuccessResponse } from "../../../shared/util/success.response";
 
 export class UserController {
   public async create(
