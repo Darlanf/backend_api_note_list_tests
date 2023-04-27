@@ -6,7 +6,7 @@ import {
 import { UserDatabase } from "../app/shared/database/repositories/user.database";
 import { ServerError } from "../app/shared/errors/generic.error";
 import { RequestError } from "../app/shared/errors/request.error";
-import { NoteDatabase } from "../app/shared/database/repositories/note.database";
+import { NoteDatabase } from "../app/features/note/repository/note.repository";
 
 export class NoteValidatorMiddleware {
   public static userExist(

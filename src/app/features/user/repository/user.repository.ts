@@ -1,8 +1,8 @@
-import { User } from "../../models/user.model";
 import { TypeormConnection } from "../../../../main/database/typeorm.connection";
-import { UserEntity } from "../entities/user.entity";
+import { User } from "../../../models/user.model";
+import { UserEntity } from "../../../shared/database/entities/user.entity";
 
-export class UserDatabase {
+export class UserRepository {
   private repository =
     TypeormConnection.connection.getRepository(
       UserEntity

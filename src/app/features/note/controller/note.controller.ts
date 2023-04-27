@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { UserDatabase } from "../../../shared/database/repositories/user.database";
 import { ServerError } from "../../../shared/errors/generic.error";
 import { RequestError } from "../../../shared/errors/request.error";
 import { Note } from "../../../models/note.model";
-import { User } from "../models/user.model";
+// import { User } from "../models/user.model";
 import { SuccessResponse } from "../../../shared/util/success.response";
-import { NoteDatabase } from "../../../shared/database/repositories/note.database";
+import { NoteRepository } from "../repository/note.repository";
+import { UserRepository } from "../../user/repository/user.repository";
 
 export class NoteController {
   public async listAll(
@@ -16,7 +16,7 @@ export class NoteController {
       const { userId } = req.params;
       const { title, filed } = req.query;
 
-      const database = new NoteDatabase();
+      const database = new NoteRepository();
       let noteList = await database.list(
         userId,
         title ? String(title) : undefined
@@ -50,11 +50,11 @@ export class NoteController {
     try {
       const { userId, noteId } = req.params;
 
-      const userDatabase = new UserDatabase();
+      const userDatabase = new UserRepository();
       const user =
         userDatabase.getUserById(userId);
 
-      const noteDatabase = new NoteDatabase();
+      const noteDatabase = new NoteRepository();
       const note = await noteDatabase.getNoteById(
         noteId
       );
@@ -77,7 +77,7 @@ export class NoteController {
       const { userId } = req.params;
       const { title, description } = req.body;
 
-      const userDatabase = new UserDatabase();
+      const userDatabase = new UserRepository();
       const user = await userDatabase.getUserById(
         userId
       );
@@ -87,7 +87,7 @@ export class NoteController {
       }
 
       const note = new Note(title, description);
-      const noteDatabase = new NoteDatabase();
+      const noteDatabase = new NoteRepository();
       const result = await noteDatabase.create(
         userId,
         note
@@ -110,7 +110,7 @@ export class NoteController {
     try {
       const { userId, noteId } = req.params;
 
-      const database = new NoteDatabase();
+      const database = new NoteRepository();
       const result = await database.delete(
         noteId
       );
@@ -138,7 +138,7 @@ export class NoteController {
       const { title, description, filed } =
         req.body;
 
-      const userDatabase = new UserDatabase();
+      const userDatabase = new UserRepository();
       const user =
         userDatabase.getUserById(userId);
 
@@ -147,7 +147,7 @@ export class NoteController {
         description,
         filed,
       };
-      const noteDatabase = new NoteDatabase();
+      const noteDatabase = new NoteRepository();
       const result = await noteDatabase.update(
         noteId,
         data

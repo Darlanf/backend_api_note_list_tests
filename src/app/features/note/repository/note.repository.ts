@@ -1,8 +1,8 @@
 import { TypeormConnection } from "../../../../main/database/typeorm.connection";
-import { NoteEntity } from "../entities/note.entity";
+import { NoteEntity } from "../../../shared/database/entities/note.entity";
 import { Note } from "../../../models/note.model";
 
-export class NoteDatabase {
+export class NoteRepository {
   private repository =
     TypeormConnection.connection.getRepository(
       NoteEntity

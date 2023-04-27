@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
-import { UserDatabase } from "../../../shared/database/repositories/user.database";
+import { UserRepository } from "../../../features/user/repository/user.repository";
 import { ServerError } from "../../../shared/errors/generic.error";
 import { RequestError } from "../../../shared/errors/request.error";
-import { User } from "../models/user.model";
+import { User } from "../../../models/user.model";
 import { SuccessResponse } from "../../../shared/util/success.response";
+import { CreateUserUsecase } from "../usecases/create-user.usecase";
+import { ListUserUsecase } from "../usecases/list-user.usecase";
 
 export class UserController {
   public async create(
@@ -14,21 +16,34 @@ export class UserController {
       const { username, email, password } =
         req.body;
 
-      const database = new UserDatabase();
-      const newUser = new User(
-        username,
-        email,
-        password
-      );
-
-      const result = await database.create(
-        newUser
-      );
+      const result =
+        await new CreateUserUsecase().execute(
+          req.body
+        );
 
       return SuccessResponse.created(
         res,
-        "User successfully created",
-        result.toJson()
+        "Usuario criado com sucesso",
+        result
+      );
+    } catch (error: any) {
+      return ServerError.genericError(res, error);
+    }
+  }
+
+  public async list(req: Request, res: Response) {
+    try {
+      const result =
+        await new ListUserUsecase().execute();
+
+      const userList: User = result.data.map(
+        (user: User) => user.toJson()
+      );
+
+      return SuccessResponse.ok(
+        res,
+        "Usuarios listados com sucesso",
+        userList
       );
     } catch (error: any) {
       return ServerError.genericError(res, error);
@@ -42,7 +57,7 @@ export class UserController {
     try {
       const { email, password } = req.body;
 
-      const database = new UserDatabase();
+      const database = new UserRepository();
       let user = await database.login(
         email,
         password
@@ -62,25 +77,6 @@ export class UserController {
     }
   }
 
-  public async list(req: Request, res: Response) {
-    try {
-      const database = new UserDatabase();
-      let userList = await database.list();
-
-      const result = userList.map((user) =>
-        user.toJson()
-      );
-
-      return SuccessResponse.ok(
-        res,
-        "Users successfully listed",
-        result
-      );
-    } catch (error: any) {
-      return ServerError.genericError(res, error);
-    }
-  }
-
   public async listOne(
     req: Request,
     res: Response
@@ -88,7 +84,7 @@ export class UserController {
     try {
       const { userId } = req.params;
 
-      const database = new UserDatabase();
+      const database = new UserRepository();
       const user = await database.getUserById(
         userId
       );
@@ -121,7 +117,7 @@ export class UserController {
         );
       }
 
-      const database = new UserDatabase();
+      const database = new UserRepository();
       const result = await database.delete(
         userId
       );
@@ -159,7 +155,7 @@ export class UserController {
         password,
       };
 
-      const database = new UserDatabase();
+      const database = new UserRepository();
       const result = await database.update(
         userId,
         data
