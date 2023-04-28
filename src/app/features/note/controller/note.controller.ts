@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 import { ServerError } from "../../../shared/errors/generic.error";
-import { RequestError } from "../../../shared/errors/request.error";
-import { Note } from "../../../models/note.model";
-// import { User } from "../models/user.model";
 import { SuccessResponse } from "../../../shared/util/success.response";
 import { NoteRepository } from "../repository/note.repository";
 import { UserRepository } from "../../user/repository/user.repository";
 import { CreateNoteUsecase } from "../usecases/create-note.usecase";
 import { ListNoteUsecase } from "../usecases/list-note.usecase";
+import { DeleteNoteUsecase } from "../usecases/delete-note.usecase";
+import { UpdateNoteUsecase } from "../usecases/update-note.usecase";
 
 export class NoteController {
   public async listAll(
@@ -85,20 +84,13 @@ export class NoteController {
     try {
       const { userId, noteId } = req.params;
 
-      const database = new NoteRepository();
-      const result = await database.delete(
-        noteId
-      );
+      const result =
+        await new DeleteNoteUsecase().execute(
+          userId,
+          noteId
+        );
 
-      if (result === 0) {
-        return RequestError.notFound(res, "Note");
-      }
-
-      return SuccessResponse.ok(
-        res,
-        "Note successfully deleted",
-        noteId
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
@@ -113,28 +105,16 @@ export class NoteController {
       const { title, description, filed } =
         req.body;
 
-      const userDatabase = new UserRepository();
-      const user =
-        userDatabase.getUserById(userId);
+      const result =
+        await new UpdateNoteUsecase().execute({
+          userId,
+          noteId,
+          title,
+          description,
+          filed,
+        });
 
-      const data = {
-        title,
-        description,
-        filed,
-      };
-      const noteDatabase = new NoteRepository();
-      const result = await noteDatabase.update(
-        noteId,
-        data
-      );
-
-      return SuccessResponse.ok(
-        res,
-        "Note successfully updated",
-        {
-          result,
-        }
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
