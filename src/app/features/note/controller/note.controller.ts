@@ -6,6 +6,8 @@ import { Note } from "../../../models/note.model";
 import { SuccessResponse } from "../../../shared/util/success.response";
 import { NoteRepository } from "../repository/note.repository";
 import { UserRepository } from "../../user/repository/user.repository";
+import { CreateNoteUsecase } from "../usecases/create-note.usecase";
+import { ListNoteUsecase } from "../usecases/list-note.usecase";
 
 export class NoteController {
   public async listAll(
@@ -16,28 +18,14 @@ export class NoteController {
       const { userId } = req.params;
       const { title, filed } = req.query;
 
-      const database = new NoteRepository();
-      let noteList = await database.list(
-        userId,
-        title ? String(title) : undefined
-      );
+      const result =
+        await new ListNoteUsecase().execute({
+          userId,
+          title,
+          filed,
+        });
 
-      let isFiled: any = undefined;
-
-      if (filed !== undefined && filed !== "") {
-        isFiled =
-          filed?.toString().toLowerCase() ===
-          "true";
-        noteList = noteList.filter(
-          (note: any) => note.filed === isFiled
-        );
-      }
-
-      return SuccessResponse.ok(
-        res,
-        "Notes successfully listed",
-        noteList
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
@@ -77,27 +65,14 @@ export class NoteController {
       const { userId } = req.params;
       const { title, description } = req.body;
 
-      const userDatabase = new UserRepository();
-      const user = await userDatabase.getUserById(
-        userId
-      );
+      const result =
+        await new CreateNoteUsecase().execute({
+          userId,
+          title,
+          description,
+        });
 
-      if (!user) {
-        return RequestError.notFound(res, "User");
-      }
-
-      const note = new Note(title, description);
-      const noteDatabase = new NoteRepository();
-      const result = await noteDatabase.create(
-        userId,
-        note
-      );
-
-      return SuccessResponse.created(
-        res,
-        "Note successfully created",
-        result
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }

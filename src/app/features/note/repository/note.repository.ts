@@ -21,11 +21,11 @@ export class NoteRepository {
     });
 
     return result.map((note) =>
-      this.mapEntityToModel(note)
+      NoteRepository.mapEntityToModel(note)
     );
   }
 
-  private mapEntityToModel(
+  public static mapEntityToModel(
     entity: NoteEntity
   ): Note {
     return Note.create(
@@ -44,7 +44,9 @@ export class NoteRepository {
       return 0;
     }
 
-    return this.mapEntityToModel(result);
+    return NoteRepository.mapEntityToModel(
+      result
+    );
   }
 
   public async create(
@@ -62,7 +64,9 @@ export class NoteRepository {
     const result = await this.repository.save(
       noteEntity
     );
-    return this.mapEntityToModel(result);
+    return NoteRepository.mapEntityToModel(
+      result
+    );
   }
 
   public async update(id: string, data?: any) {

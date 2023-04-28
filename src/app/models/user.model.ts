@@ -59,10 +59,6 @@ export class User {
     };
   }
 
-  public addNote(note: Note) {
-    this._notes.push(note);
-  }
-
   public static create(
     id: string,
     username: string,
