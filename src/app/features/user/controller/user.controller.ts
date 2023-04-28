@@ -7,6 +7,7 @@ import { SuccessResponse } from "../../../shared/util/success.response";
 import { CreateUserUsecase } from "../usecases/create-user.usecase";
 import { ListUserUsecase } from "../usecases/list-user.usecase";
 import { DeleteUserUsecase } from "../usecases/delete-user.usecase";
+import { UpdateUserUsecase } from "../usecases/update-user.usecase";
 
 export class UserController {
   public async create(
@@ -93,32 +94,14 @@ export class UserController {
       const { userId } = req.params;
       const { username, password } = req.body;
 
-      if (!userId) {
-        return RequestError.notProvided(
-          res,
-          "User"
-        );
-      }
-      const data = {
-        username,
-        password,
-      };
+      const result =
+        await new UpdateUserUsecase().execute({
+          userId,
+          username,
+          password,
+        });
 
-      const database = new UserRepository();
-      const result = await database.update(
-        userId,
-        data
-      );
-
-      if (result === 0) {
-        return RequestError.notFound(res, "user");
-      }
-
-      return SuccessResponse.ok(
-        res,
-        "User successfully update",
-        userId
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }

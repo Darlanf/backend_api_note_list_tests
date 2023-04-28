@@ -96,7 +96,6 @@ export class UserRepository {
     const result = await this.repository.delete({
       id,
     });
-    console.log(result.affected);
 
     return result.affected ?? 0;
   }

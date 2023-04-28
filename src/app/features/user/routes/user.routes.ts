@@ -18,5 +18,10 @@ export const userRoutes = () => {
     new UserController().delete
   );
 
+  app.put(
+    "/:userId",
+    new UserController().update
+  );
+
   return app;
 };
