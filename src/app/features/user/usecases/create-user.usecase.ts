@@ -1,5 +1,6 @@
 import { User } from "../../../models/user.model";
 import { CacheRepository } from "../../../shared/database/repositories/cache.repository";
+import { RequestError } from "../../../shared/errors/request.error";
 import { Return } from "../../../shared/util/return.usecase.contract";
 import { UserRepository } from "../repository/user.repository";
 
@@ -21,6 +22,24 @@ export class CreateUserUsecase {
       data.password
     );
 
+    if (data.username.length > 30) {
+      return {
+        ok: false,
+        code: 400,
+        message:
+          "Username pode ter no maximo 30 caracteres",
+      };
+    }
+
+    if (data.password.length > 12) {
+      return {
+        ok: false,
+        code: 400,
+        message:
+          "Password pode ter no maximo 12 characters",
+      };
+    }
+
     const result = await repository.create(
       newUser
     );
@@ -34,7 +53,7 @@ export class CreateUserUsecase {
       ok: true,
       code: 201,
       message: "Usuario criado com sucesso",
-      data: result,
+      data: result.toJson(),
     };
   }
 }

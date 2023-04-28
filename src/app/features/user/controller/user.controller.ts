@@ -6,6 +6,7 @@ import { User } from "../../../models/user.model";
 import { SuccessResponse } from "../../../shared/util/success.response";
 import { CreateUserUsecase } from "../usecases/create-user.usecase";
 import { ListUserUsecase } from "../usecases/list-user.usecase";
+import { DeleteUserUsecase } from "../usecases/delete-user.usecase";
 
 export class UserController {
   public async create(
@@ -23,11 +24,7 @@ export class UserController {
           password,
         });
 
-      return SuccessResponse.created(
-        res,
-        "Usuario criado com sucesso",
-        result.data.toJson()
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
@@ -38,15 +35,7 @@ export class UserController {
       const result =
         await new ListUserUsecase().execute();
 
-      const userList: User = result.data.map(
-        (user: User) => user.toJson()
-      );
-
-      return SuccessResponse.ok(
-        res,
-        "Usuarios listados com sucesso",
-        userList
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
@@ -85,27 +74,12 @@ export class UserController {
     try {
       const { userId } = req.params;
 
-      if (!userId) {
-        return RequestError.notProvided(
-          res,
-          "User id"
+      const result =
+        await new DeleteUserUsecase().execute(
+          userId
         );
-      }
 
-      const database = new UserRepository();
-      const result = await database.delete(
-        userId
-      );
-
-      if (result === 0) {
-        return RequestError.notFound(res, "User");
-      }
-
-      return SuccessResponse.ok(
-        res,
-        "User successfully deleted",
-        userId
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }

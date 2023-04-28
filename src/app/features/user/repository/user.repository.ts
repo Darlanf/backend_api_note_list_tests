@@ -60,6 +60,21 @@ export class UserRepository {
     return this.mapEntityToModel(result);
   }
 
+  public async getUserByEmail(
+    email: string
+  ): Promise<User | null> {
+    const result =
+      await this.repository.findOneBy({
+        email,
+      });
+
+    if (!result) {
+      return null;
+    }
+
+    return this.mapEntityToModel(result);
+  }
+
   public async create(user: User) {
     const userEntity = this.repository.create({
       id: user.id,
@@ -81,6 +96,7 @@ export class UserRepository {
     const result = await this.repository.delete({
       id,
     });
+    console.log(result.affected);
 
     return result.affected ?? 0;
   }
