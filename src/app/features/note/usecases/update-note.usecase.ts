@@ -28,11 +28,6 @@ export class UpdateNoteUsecase {
       };
     }
 
-    // const data = {
-    //   title,
-    //   description,
-    //   filed,
-    // };
     const noteDatabase = new NoteRepository();
     const result = await noteDatabase.update(
       data.noteId,
@@ -44,7 +39,7 @@ export class UpdateNoteUsecase {
     );
 
     await new CacheRepository().delete(
-      `listaDeNotas:${data.userId}`
+      `Nota:${data.noteId}`
     );
     return {
       ok: true,

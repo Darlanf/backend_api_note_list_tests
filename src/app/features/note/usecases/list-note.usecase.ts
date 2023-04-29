@@ -47,9 +47,10 @@ export class ListNoteUsecase {
         (note: any) => note.filed === isFiled
       );
     }
-    await cacheRepository.set(
+    await cacheRepository.setEx(
       `listaDeNotas:${data.userId}:${data.title}:${data.filed}`,
-      noteList
+      noteList,
+      120
     );
 
     return {

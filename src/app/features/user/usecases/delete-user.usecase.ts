@@ -31,6 +31,9 @@ export class DeleteUserUsecase {
     await cacheRepository.delete(
       "listaDeUsuarios"
     );
+    await cacheRepository.delete(
+      `listaDeNotas:${userId}`
+    );
 
     return {
       ok: true,
