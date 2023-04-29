@@ -2,6 +2,7 @@ import { Router } from "express";
 import { UserController } from "../controller/user.controller";
 import { CreateUserValidator } from "../validators/create-user-validator";
 import { noteRoutes } from "../../note/routes/note.routes";
+import { loginRoutes } from "../../login/routes/login.routes";
 
 export const userRoutes = () => {
   const app = Router();
@@ -25,6 +26,8 @@ export const userRoutes = () => {
   );
 
   app.use("/:userId/notes", noteRoutes());
+
+  app.use("/login", loginRoutes());
 
   return app;
 };

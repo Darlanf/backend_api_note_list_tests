@@ -27,7 +27,7 @@ export class LoginUsecase {
       ok: true,
       code: 200,
       message: "Login feito com sucesso",
-      data: user,
+      data: user.toJson(),
     };
   }
 }

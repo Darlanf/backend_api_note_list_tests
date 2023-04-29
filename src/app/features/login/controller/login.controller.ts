@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import { UserRepository } from "../../user/repository/user.repository";
-import { RequestError } from "../../../shared/errors/request.error";
 import { SuccessResponse } from "../../../shared/util/success.response";
 import { ServerError } from "../../../shared/errors/generic.error";
 import { LoginUsecase } from "../usecases/login.usecase";
@@ -19,11 +17,7 @@ export class LoginController {
           password,
         });
 
-      return SuccessResponse.ok(
-        res,
-        "Login feito com sucesso",
-        result.data.toJson()
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
