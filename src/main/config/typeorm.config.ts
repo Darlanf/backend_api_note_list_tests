@@ -6,7 +6,7 @@ let entities =
 let migrations =
   "src/app/shared/database/migrations/**/*.ts";
 
-if (databaseEnv.nodeEnv != "dev") {
+if (databaseEnv.nodeEnv !== "dev") {
   entities =
     "build/app/shared/database/entities/**/*.js";
   migrations =
