@@ -7,6 +7,7 @@ import { CreateNoteUsecase } from "../usecases/create-note.usecase";
 import { ListNoteUsecase } from "../usecases/list-note.usecase";
 import { DeleteNoteUsecase } from "../usecases/delete-note.usecase";
 import { UpdateNoteUsecase } from "../usecases/update-note.usecase";
+import { GetNoteUsecase } from "../usecases/get-note.usecase";
 
 export class NoteController {
   public async listAll(
@@ -30,27 +31,20 @@ export class NoteController {
     }
   }
 
-  public async listOne(
+  public async getOne(
     req: Request,
     res: Response
   ) {
     try {
       const { userId, noteId } = req.params;
 
-      const userDatabase = new UserRepository();
-      const user =
-        userDatabase.getUserById(userId);
+      const result =
+        await new GetNoteUsecase().execute(
+          userId,
+          noteId
+        );
 
-      const noteDatabase = new NoteRepository();
-      const note = await noteDatabase.getNoteById(
-        noteId
-      );
-
-      return SuccessResponse.ok(
-        res,
-        "Note successfully listed",
-        note
-      );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }

@@ -10,6 +10,11 @@ export const noteRoutes = () => {
 
   app.get("/", new NoteController().listAll);
 
+  app.get(
+    "/:noteId",
+    new NoteController().getOne
+  );
+
   app.delete(
     "/:noteId",
     new NoteController().delete
