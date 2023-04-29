@@ -29,5 +29,12 @@ export const userRoutes = () => {
 
   app.use("/login", loginRoutes());
 
+  app.all("/*", (req, res) => {
+    return res.status(500).send({
+      ok: false,
+      message: "rota não encontrada",
+    });
+  });
+
   return app;
 };
