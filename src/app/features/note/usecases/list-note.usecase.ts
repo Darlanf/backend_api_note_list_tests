@@ -1,4 +1,3 @@
-import { log } from "console";
 import { Note } from "../../../models/note.model";
 import { CacheRepository } from "../../../shared/database/repositories/cache.repository";
 import { Return } from "../../../shared/util/return.usecase.contract";
@@ -16,8 +15,8 @@ export class ListNoteUsecase {
   ): Promise<Return> {
     const cacheRepository = new CacheRepository();
     let cachedNoteList =
-      await cacheRepository.get<any>(
-        `listaDeNotas:${data.userId}`
+      await cacheRepository.get<Note[]>(
+        `listaDeNotas:${data.userId}:${data.title}:${data.filed}`
       );
 
     if (cachedNoteList !== null) {
@@ -49,7 +48,7 @@ export class ListNoteUsecase {
       );
     }
     await cacheRepository.set(
-      `listaDeNotas:${data.userId}`,
+      `listaDeNotas:${data.userId}:${data.title}:${data.filed}`,
       noteList
     );
 
