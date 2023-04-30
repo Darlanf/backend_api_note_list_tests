@@ -10,12 +10,14 @@ export class NoteRepository {
 
   public async list(
     userId: string,
-    title?: string
+    title?: string,
+    filed?: boolean
   ) {
     const result = await this.repository.find({
       where: {
         idUser: userId,
         title,
+        filed,
       },
       relations: ["user"],
     });

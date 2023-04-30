@@ -31,25 +31,15 @@ export class ListNoteUsecase {
         data: cachedNoteList,
       };
     }
+
+    const filed = this.isFiled(data.filed);
+
     const database = new NoteRepository();
     let noteList = await database.list(
       data.userId,
-      data.title ? String(data.title) : undefined
+      data.title ? String(data.title) : undefined,
+      filed
     );
-
-    let isFiled: any = undefined;
-
-    if (
-      data.filed !== undefined &&
-      data.filed !== ""
-    ) {
-      isFiled =
-        data.filed?.toString().toLowerCase() ===
-        "true";
-      noteList = noteList.filter(
-        (note: any) => note.filed === isFiled
-      );
-    }
 
     await this.saveCache(
       data.userId,
@@ -64,6 +54,21 @@ export class ListNoteUsecase {
       message: "Notas listadas com sucesso",
       data: noteList,
     };
+  }
+
+  private isFiled(filed: string) {
+    switch (filed) {
+      case "":
+        return undefined;
+      case undefined:
+        return undefined;
+      case "false":
+        return false;
+      case "true":
+        return true;
+      default:
+        return;
+    }
   }
 
   private async saveCache(
