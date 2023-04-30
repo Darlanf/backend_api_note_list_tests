@@ -8,14 +8,6 @@ export class DeleteUserUsecase {
   ): Promise<Return> {
     const repository = new UserRepository();
 
-    // validator?
-    // if (!userId) {
-    //     return RequestError.notProvided(
-    //       res,
-    //       "User id"
-    //     );
-    //   }
-
     const result = await repository.delete(
       userId
     );

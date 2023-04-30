@@ -8,6 +8,7 @@ import { CreateUserUsecase } from "../usecases/create-user.usecase";
 import { ListUserUsecase } from "../usecases/list-user.usecase";
 import { DeleteUserUsecase } from "../usecases/delete-user.usecase";
 import { UpdateUserUsecase } from "../usecases/update-user.usecase";
+import { GetOneUserUsecase } from "../usecases/getOne-user.usecase";
 
 export class UserController {
   public async create(
@@ -49,20 +50,11 @@ export class UserController {
     try {
       const { userId } = req.params;
 
-      const database = new UserRepository();
-      const user = await database.getUserById(
-        userId
-      );
-
-      if (!user) {
-        return RequestError.notFound(res, "User");
-      }
-
-      return SuccessResponse.ok(
-        res,
-        "User successfully obtained",
-        user.toJson()
-      );
+      const result =
+        await new GetOneUserUsecase().execute(
+          userId
+        );
+      return res.status(result.code).send(result);
     } catch (error: any) {
       return ServerError.genericError(res, error);
     }
