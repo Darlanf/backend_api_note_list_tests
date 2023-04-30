@@ -14,36 +14,6 @@ export class UpdateUserUsecase {
   ): Promise<Return> {
     const repository = new UserRepository();
 
-    // validator?
-    // if (!userId) {
-    //     return RequestError.notProvided(
-    //       res,
-    //       "User"
-    //     );
-    //   }
-
-    if (
-      data.username !== undefined &&
-      data.username.trim().length <= 0
-    ) {
-      return {
-        ok: false,
-        code: 400,
-        message: "Nome de usuario invalido",
-      };
-    }
-
-    if (
-      data.password !== undefined &&
-      data.password.trim().length <= 0
-    ) {
-      return {
-        ok: false,
-        code: 400,
-        message: "Nome de usuario invalido",
-      };
-    }
-
     const result = await repository.update(
       data.userId,
       {
