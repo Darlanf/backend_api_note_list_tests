@@ -3,6 +3,7 @@ import { UserController } from "../controller/user.controller";
 import { CreateUserValidator } from "../validators/create-user-validator";
 import { noteRoutes } from "../../note/routes/note.routes";
 import { loginRoutes } from "../../login/routes/login.routes";
+import { UpdateUserValidator } from "../validators/update-user.validator";
 
 export const userRoutes = () => {
   const app = Router();
@@ -15,6 +16,11 @@ export const userRoutes = () => {
 
   app.get("/", new UserController().list);
 
+  app.get(
+    "/:userId",
+    new UserController().getOne
+  );
+
   app.delete(
     "/:userId",
     new UserController().delete
@@ -22,6 +28,7 @@ export const userRoutes = () => {
 
   app.put(
     "/:userId",
+    UpdateUserValidator.validate,
     new UserController().update
   );
 
