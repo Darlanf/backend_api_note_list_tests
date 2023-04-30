@@ -7,7 +7,7 @@ export class RequestError {
   ) {
     return res.status(400).send({
       ok: false,
-      message: field + " was not provided",
+      message: field + " nao informado",
     });
   }
 
@@ -17,7 +17,7 @@ export class RequestError {
   ) {
     return res.status(404).send({
       ok: false,
-      message: entity + " was not found",
+      message: entity + " nao encontrado",
     });
   }
 
@@ -34,14 +34,14 @@ export class RequestError {
   public static unauthorized(res: Response) {
     return res.status(401).send({
       ok: false,
-      message: "Access not authorized",
+      message: "Acesso nao autorizado",
     });
   }
 
   public static forbidden(res: Response) {
     return res.status(403).send({
       ok: false,
-      message: "Access not authorized",
+      message: "Acesso nao autorizado",
     });
   }
 }
