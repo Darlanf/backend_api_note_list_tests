@@ -18,7 +18,7 @@ export class DeleteNoteUsecase {
       };
     }
     await new CacheRepository().delete(
-      `Notas:${noteId}`
+      `Nota:${noteId}`
     );
     return {
       ok: true,

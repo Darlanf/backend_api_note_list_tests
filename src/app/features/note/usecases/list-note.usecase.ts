@@ -13,18 +13,21 @@ export class ListNoteUsecase {
   public async execute(
     data: ListNoteParams
   ): Promise<Return> {
-    const cacheRepository = new CacheRepository();
-    let cachedNoteList =
-      await cacheRepository.get<Note[]>(
-        `listaDeNotas:${data.userId}:${data.title}:${data.filed}`
-      );
+    const cachedNoteList = await this.getCache(
+      data.userId,
+      data.title,
+      data.filed
+    );
 
-    if (cachedNoteList !== null) {
+    if (
+      cachedNoteList !== null &&
+      cachedNoteList !== undefined
+    ) {
       return {
         ok: true,
         code: 200,
         message:
-          "Usuarios listados com sucesso - cache",
+          "Notas listadas com sucesso - cache",
         data: cachedNoteList,
       };
     }
@@ -47,10 +50,12 @@ export class ListNoteUsecase {
         (note: any) => note.filed === isFiled
       );
     }
-    await cacheRepository.setEx(
-      `listaDeNotas:${data.userId}:${data.title}:${data.filed}`,
+
+    await this.saveCache(
+      data.userId,
       noteList,
-      120
+      data.title,
+      data.filed
     );
 
     return {
@@ -59,5 +64,94 @@ export class ListNoteUsecase {
       message: "Notas listadas com sucesso",
       data: noteList,
     };
+  }
+
+  private async saveCache(
+    userId: string,
+    noteList: Note[],
+    title?: any,
+    filed?: any
+  ) {
+    const cacheRepository = new CacheRepository();
+
+    if (
+      (title === undefined || title === "") &&
+      (filed === undefined || filed === "")
+    ) {
+      await cacheRepository.setEx(
+        `listaDeNotas:${userId}::`,
+        noteList,
+        3000
+      );
+    } else if (
+      title !== undefined &&
+      (filed === undefined || filed === "")
+    ) {
+      await cacheRepository.setEx(
+        `listaDeNotas:${userId}:${title}:`,
+        noteList,
+        3000
+      );
+    } else if (
+      (title === undefined || title === "") &&
+      filed !== undefined
+    ) {
+      await cacheRepository.setEx(
+        `listaDeNotas:${userId}::${filed}`,
+        noteList,
+        3000
+      );
+    } else if (
+      title !== undefined &&
+      filed !== undefined
+    ) {
+      await cacheRepository.setEx(
+        `listaDeNotas:${userId}:${title}:${filed}`,
+        noteList,
+        3000
+      );
+    }
+  }
+
+  private async getCache(
+    userId: string,
+    title?: any,
+    filed?: any
+  ) {
+    const cacheRepository = new CacheRepository();
+    let cachedNoteList;
+
+    if (
+      (title === undefined || title === "") &&
+      (filed === undefined || filed === "")
+    ) {
+      cachedNoteList = await cacheRepository.get<
+        Note[]
+      >(`listaDeNotas:${userId}::`);
+    } else if (
+      title !== undefined &&
+      (filed === undefined || filed === "")
+    ) {
+      cachedNoteList = await cacheRepository.get<
+        Note[]
+      >(`listaDeNotas:${userId}:${title}:`);
+    } else if (
+      (title === undefined || title === "") &&
+      filed !== undefined
+    ) {
+      cachedNoteList = await cacheRepository.get<
+        Note[]
+      >(`listaDeNotas:${userId}::${filed}`);
+    } else if (
+      title !== undefined &&
+      filed !== undefined
+    ) {
+      cachedNoteList = await cacheRepository.get<
+        Note[]
+      >(
+        `listaDeNotas:${userId}:${title}:${filed}`
+      );
+    }
+    return cachedNoteList;
   }
 }
