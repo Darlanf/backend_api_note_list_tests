@@ -18,7 +18,7 @@ export class UpdateUserValidator {
 
       if (
         username !== undefined &&
-        username.trim().length <= 0
+        username.trim().length < 3
       ) {
         return RequestError.invalidData(
           res,
@@ -28,7 +28,7 @@ export class UpdateUserValidator {
 
       if (
         password !== undefined &&
-        password.trim().length <= 0
+        String(password).trim().length < 6
       ) {
         return RequestError.invalidData(
           res,
