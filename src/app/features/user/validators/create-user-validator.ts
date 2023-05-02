@@ -38,6 +38,27 @@ export class CreateUserValidator {
         );
       }
 
+      if (String(username).trim().length < 3) {
+        return RequestError.invalidData(
+          res,
+          "Username precisa ter ao menos 6 caracteres"
+        );
+      }
+
+      if (String(email).trim().length < 6) {
+        return RequestError.invalidData(
+          res,
+          "Email invalido"
+        );
+      }
+
+      if (String(password).trim().length < 6) {
+        return RequestError.invalidData(
+          res,
+          "Password precisa ter ao menos 6 caracteres"
+        );
+      }
+
       const user =
         await new UserRepository().getUserByEmail(
           email
