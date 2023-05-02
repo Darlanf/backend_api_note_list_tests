@@ -71,22 +71,31 @@ export class NoteRepository {
     );
   }
 
-  public async update(id: string, data?: any) {
+  public async update(
+    id: string,
+    title?: string,
+    description?: string,
+    filed?: boolean
+  ) {
+    console.log("repo", typeof filed);
+
     const result = await this.repository.update(
       {
         id,
       },
       {
-        title: data.title,
-        description: data.description,
-        filed: data.filed,
+        title: title,
+        description: description,
+        filed: filed,
       }
     );
 
     if (result.affected === 1) {
       return {
         id,
-        data,
+        title,
+        description,
+        filed,
       };
     }
 

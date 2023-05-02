@@ -20,23 +20,23 @@ export class UpdateNoteUsecase {
       data.userId
     );
 
-    if (!user) {
+    if (user === null) {
       return {
         ok: false,
         code: 404,
         message: "Usuario nao encontrado",
       };
     }
+    console.log("usecase", typeof data.filed);
 
     const noteDatabase = new NoteRepository();
     const result = await noteDatabase.update(
       data.noteId,
-      {
-        title: data.title,
-        description: data.description,
-        filed: data.filed,
-      }
+      data.title,
+      data.description,
+      data.filed
     );
+    console.log("rslt", result);
 
     await new CacheRepository().delete(
       `Nota:${data.noteId}`
