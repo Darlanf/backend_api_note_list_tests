@@ -20,12 +20,14 @@ export class DeleteUserUsecase {
       };
     }
     const cacheRepository = new CacheRepository();
-    await cacheRepository.delete(
-      "listaDeUsuarios"
+
+    const keys = await cacheRepository.listByKeys(
+      `listaDeNotas:${userId}:*`
     );
-    await cacheRepository.delete(
-      `listaDeNotas:${userId}`
-    );
+
+    keys.forEach(async (key) => {
+      await cacheRepository.delete(key);
+    });
 
     return {
       ok: true,

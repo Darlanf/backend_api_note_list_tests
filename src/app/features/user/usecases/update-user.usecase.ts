@@ -1,4 +1,3 @@
-import { CacheRepository } from "../../../shared/database/repositories/cache.repository";
 import { Return } from "../../../shared/util/return.usecase.contract";
 import { UserRepository } from "../repository/user.repository";
 
@@ -29,11 +28,6 @@ export class UpdateUserUsecase {
         message: "Usuario nao encontrado",
       };
     }
-
-    const cacheRepository = new CacheRepository();
-    await cacheRepository.delete(
-      "listaDeUsuarios"
-    );
 
     return {
       ok: true,

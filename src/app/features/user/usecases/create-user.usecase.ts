@@ -1,6 +1,4 @@
 import { User } from "../../../models/user.model";
-import { CacheRepository } from "../../../shared/database/repositories/cache.repository";
-import { RequestError } from "../../../shared/errors/request.error";
 import { Return } from "../../../shared/util/return.usecase.contract";
 import { UserRepository } from "../repository/user.repository";
 
@@ -42,11 +40,6 @@ export class CreateUserUsecase {
 
     const result = await repository.create(
       newUser
-    );
-
-    const cacheRepository = new CacheRepository();
-    await cacheRepository.delete(
-      "listaDeUsuarios"
     );
 
     return {

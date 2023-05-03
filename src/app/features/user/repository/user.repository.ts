@@ -1,6 +1,7 @@
 import { TypeormConnection } from "../../../../main/database/typeorm.connection";
 import { User } from "../../../models/user.model";
 import { UserEntity } from "../../../shared/database/entities/user.entity";
+import { NoteRepository } from "../../note/repository/note.repository";
 
 export class UserRepository {
   private repository =
@@ -37,11 +38,16 @@ export class UserRepository {
   private mapEntityToModel(
     entity: UserEntity
   ): User {
+    const notesEntity = entity.notes ?? [];
+    const notes = notesEntity.map((note) =>
+      NoteRepository.mapEntityToModel(note)
+    );
     return User.create(
       entity.id,
       entity.username,
       entity.email,
-      entity.password
+      entity.password,
+      notes
     );
   }
 

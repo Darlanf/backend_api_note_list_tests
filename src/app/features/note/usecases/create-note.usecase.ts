@@ -37,10 +37,15 @@ export class CreateNoteUsecase {
       data.userId,
       note
     );
+    const cacheRepository = new CacheRepository();
 
-    await new CacheRepository().delete(
-      `listaDeNotas:${data.userId}`
+    const keys = await cacheRepository.listByKeys(
+      `listaDeNotas:${data.userId}:*`
     );
+
+    keys.forEach(async (key) => {
+      await cacheRepository.delete(key);
+    });
 
     return {
       ok: true,

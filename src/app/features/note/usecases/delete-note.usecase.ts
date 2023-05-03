@@ -17,9 +17,15 @@ export class DeleteNoteUsecase {
         message: "Nota não encontrada",
       };
     }
-    await new CacheRepository().delete(
-      `Nota:${noteId}`
+    const cacheRepository = new CacheRepository();
+
+    const keys = await cacheRepository.listByKeys(
+      `listaDeNotas:${userId}:*`
     );
+
+    keys.forEach(async (key) => {
+      await cacheRepository.delete(key);
+    });
     return {
       ok: true,
       code: 200,

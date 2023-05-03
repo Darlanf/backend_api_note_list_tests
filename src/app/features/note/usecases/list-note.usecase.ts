@@ -86,7 +86,7 @@ export class ListNoteUsecase {
       await cacheRepository.setEx(
         `listaDeNotas:${userId}::`,
         noteList,
-        3000
+        300
       );
     } else if (
       title !== undefined &&
@@ -95,7 +95,7 @@ export class ListNoteUsecase {
       await cacheRepository.setEx(
         `listaDeNotas:${userId}:${title}:`,
         noteList,
-        3000
+        300
       );
     } else if (
       (title === undefined || title === "") &&
@@ -104,7 +104,7 @@ export class ListNoteUsecase {
       await cacheRepository.setEx(
         `listaDeNotas:${userId}::${filed}`,
         noteList,
-        3000
+        300
       );
     } else if (
       title !== undefined &&
@@ -113,7 +113,7 @@ export class ListNoteUsecase {
       await cacheRepository.setEx(
         `listaDeNotas:${userId}:${title}:${filed}`,
         noteList,
-        3000
+        300
       );
     }
   }
