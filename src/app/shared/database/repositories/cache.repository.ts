@@ -38,4 +38,8 @@ export class CacheRepository {
   public async delete(key: string) {
     await this.repository.del(key);
   }
+
+  public async listByKeys(key: string) {
+    return await this.repository.keys(key);
+  }
 }
