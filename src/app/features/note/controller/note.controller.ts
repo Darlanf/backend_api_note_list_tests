@@ -98,7 +98,6 @@ export class NoteController {
       const { userId, noteId } = req.params;
       const { title, description, filed } =
         req.body;
-      console.log("ctrl", typeof filed);
 
       const result =
         await new UpdateNoteUsecase().execute({

@@ -77,8 +77,6 @@ export class NoteRepository {
     description?: string,
     filed?: boolean
   ) {
-    console.log("repo", typeof filed);
-
     const result = await this.repository.update(
       {
         id,
