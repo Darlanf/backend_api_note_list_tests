@@ -4,7 +4,7 @@ import { GetOneUserUsecase } from "./../../../../../src/app/features/user/usecas
 import { UserRepository } from "../../../../../src/app/features/user/repository/user.repository";
 import { User } from "../../../../../src/app/models/user.model";
 
-describe("delete user usecase unit tests", () => {
+describe("GetOne user usecase unit tests", () => {
   beforeAll(async () => {
     await TypeormConnection.init();
     await RedisConnection.connect();
