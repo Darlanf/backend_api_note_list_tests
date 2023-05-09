@@ -84,7 +84,6 @@ describe("Create note usecase unit test", () => {
       title: "any_title",
       description: "any_description",
     });
-    console.log(result.data);
 
     expect(result).toBeDefined();
     expect(result).toHaveProperty("ok");
