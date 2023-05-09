@@ -2,6 +2,7 @@ import { TypeormConnection } from "../../../../../src/main/database/typeorm.conn
 import { RedisConnection } from "../../../../../src/main/database/redis.connection";
 import { DeleteUserUsecase } from "./../../../../../src/app/features/user/usecases/delete-user.usecase";
 import { UserRepository } from "../../../../../src/app/features/user/repository/user.repository";
+import { CacheRepository } from "../../../../../src/app/shared/database/repositories/cache.repository";
 
 describe("delete user usecase unit tests", () => {
   beforeAll(async () => {
@@ -52,6 +53,17 @@ describe("delete user usecase unit tests", () => {
     jest
       .spyOn(UserRepository.prototype, "delete")
       .mockResolvedValue(1);
+
+    jest
+      .spyOn(
+        CacheRepository.prototype,
+        "listByKeys"
+      )
+      .mockResolvedValue(["any-key"]);
+
+    jest
+      .spyOn(CacheRepository.prototype, "delete")
+      .mockResolvedValue();
     const sut = makeSut();
 
     const result = await sut.execute("any_id");
