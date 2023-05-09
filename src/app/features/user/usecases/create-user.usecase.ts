@@ -12,14 +12,6 @@ export class CreateUserUsecase {
   public async execute(
     data: CreateUserParams
   ): Promise<Return> {
-    const repository = new UserRepository();
-
-    const newUser = new User(
-      data.username,
-      data.email,
-      data.password
-    );
-
     if (data.username.length > 30) {
       return {
         ok: false,
@@ -34,9 +26,17 @@ export class CreateUserUsecase {
         ok: false,
         code: 400,
         message:
-          "Password pode ter no maximo 12 characters",
+          "Password pode ter no maximo 12 caracteres",
       };
     }
+
+    const newUser = new User(
+      data.username,
+      data.email,
+      data.password
+    );
+
+    const repository = new UserRepository();
 
     const result = await repository.create(
       newUser

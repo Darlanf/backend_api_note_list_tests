@@ -12,10 +12,10 @@
     "migration:create": "npm run typeorm migration:create",
     "migration:run": "npm run typeorm migration:run -- -d ./src/database/config/database.config.ts",
     "migration:revert": "npm run typeorm migration:revert -- -d ./src/database/config/database.config.ts",
-    "test": "cross-env API_ENV=test jest --silent --noStackTrace --runInBand",
-    "test:verbose": "cross-env API_ENV=test jest --verbose --runInBand --detectOpenHandles",
-    "test:coverage": "cross-env API_ENV=test jest --runInBand --coverage",
-    "test:watch": "cross-env API_ENV=test jest --silent --noStackTrace --runInBand --watchAll"
+    "test": "jest --silent --noStackTrace --runInBand",
+    "test:verbose": "jest --verbose --runInBand --detectOpenHandles",
+    "test:coverage": "jest --runInBand --coverage",
+    "test:watch": "jest --silent --noStackTrace --runInBand --watchAll"
   },
   "keywords": [],
   "author": "Darlan Fabricio",
