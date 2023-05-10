@@ -41,7 +41,7 @@ export class CreateUserValidator {
       if (String(username).trim().length < 3) {
         return RequestError.invalidData(
           res,
-          "Username precisa ter ao menos 6 caracteres"
+          "Username precisa ter ao menos 3 caracteres"
         );
       }
 

@@ -5,6 +5,7 @@ export default {
     ".+\\.ts$": "ts-jest",
   },
 
+  setupFilesAfterEnv: ["./jest.setup.js"],
   roots: ["<rootDir>/tests"],
 
   //configurações de cobertura de código.
