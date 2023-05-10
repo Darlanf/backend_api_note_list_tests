@@ -4,6 +4,7 @@ import { User } from "../../../../../src/app/models/user.model";
 import { RedisConnection } from "../../../../../src/main/database/redis.connection";
 import { TypeormConnection } from "../../../../../src/main/database/typeorm.connection";
 import { DeleteNoteUsecase } from "../../../../../src/app/features/note/usecases/delete-note.usecase";
+import { CacheRepository } from "../../../../../src/app/shared/database/repositories/cache.repository";
 
 describe("delete note usecase unit tests", () => {
   beforeAll(async () => {
@@ -63,6 +64,17 @@ describe("delete note usecase unit tests", () => {
     jest
       .spyOn(NoteRepository.prototype, "delete")
       .mockResolvedValue(1);
+
+    jest
+      .spyOn(
+        CacheRepository.prototype,
+        "listByKeys"
+      )
+      .mockResolvedValue(["any-key"]);
+
+    jest
+      .spyOn(CacheRepository.prototype, "delete")
+      .mockResolvedValue();
 
     const sut = makeSut();
 
