@@ -1,4 +1,3 @@
-// import { Note } from "../../../models/note.model";
 import { CreateNoteUsecase } from "../../../../../src/app/features/note/usecases/create-note.usecase";
 import { UserRepository } from "../../../../../src/app/features/user/repository/user.repository";
 import { NoteRepository } from "../../../../../src/app/features/note/repository/note.repository";
@@ -6,6 +5,7 @@ import { TypeormConnection } from "../../../../../src/main/database/typeorm.conn
 import { RedisConnection } from "../../../../../src/main/database/redis.connection";
 import { User } from "../../../../../src/app/models/user.model";
 import { Note } from "../../../../../src/app/models/note.model";
+import { CacheRepository } from "../../../../../src/app/shared/database/repositories/cache.repository";
 
 describe("Create note usecase unit test", () => {
   beforeAll(async () => {
@@ -76,6 +76,17 @@ describe("Create note usecase unit test", () => {
     jest
       .spyOn(NoteRepository.prototype, "create")
       .mockResolvedValue(note);
+
+    jest
+      .spyOn(
+        CacheRepository.prototype,
+        "listByKeys"
+      )
+      .mockResolvedValue(["any-key"]);
+
+    jest
+      .spyOn(CacheRepository.prototype, "delete")
+      .mockResolvedValue();
 
     const sut = makeSut();
 
