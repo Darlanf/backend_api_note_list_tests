@@ -1,11 +1,10 @@
 import request from "supertest";
-import { TypeormConnection } from "../../../../../src/main/database/typeorm.connection";
-import { RedisConnection } from "../../../../../src/main/database/redis.connection";
-import { createApp } from "../../../../../src/main/config/express.config";
-import { GetOneUserUsecase } from "../../../../../src/app/features/user/usecases/getOne-user.usecase";
-import { User } from "../../../../../src/app/models/user.model";
-import { UserRepository } from "../../../../../src/app/features/user/repository/user.repository";
 import { UserEntity } from "../../../../../src/app/shared/database/entities/user.entity";
+import { RedisConnection } from "../../../../../src/main/database/redis.connection";
+import { TypeormConnection } from "../../../../../src/main/database/typeorm.connection";
+import { createApp } from "../../../../../src/main/config/express.config";
+import { User } from "../../../../../src/app/models/user.model";
+import { DeleteUserUsecase } from "../../../../../src/app/features/user/usecases/delete-user.usecase";
 
 describe("GetOne user controller test", () => {
   beforeAll(async () => {
@@ -28,9 +27,14 @@ describe("GetOne user controller test", () => {
 
   const app = createApp();
 
-  test("deveria retornar erro 404 se o usuario não for encontrado", async () => {
+  test("deveria retornar 404 se o usuario não for encontrado ", async () => {
+    const newUser = new User(
+      "any_username",
+      "any_email",
+      "any_password"
+    );
     const res = await request(app)
-      .get("/user/:userId")
+      .delete(`/user/${newUser.id}`)
       .send();
 
     expect(res).toBeDefined();
@@ -43,20 +47,25 @@ describe("GetOne user controller test", () => {
     );
   });
 
-  test("deveria retornar erro 500 quando o usecase gerar exceção", async () => {
-    const getOneUsecaseSpy = jest
+  test("deveria retornar 500 se o usecase gerar exceção", async () => {
+    const deleteUsecaseSpy = jest
       .spyOn(
-        GetOneUserUsecase.prototype,
+        DeleteUserUsecase.prototype,
         "execute"
       )
-      .mockImplementation(async (_: string) => {
+      .mockImplementation((_: string) => {
         throw new Error(
           "Erro simulado no usecase"
         );
       });
 
+    const newUser = new User(
+      "any_username",
+      "any_email",
+      "any_password"
+    );
     const res = await request(app)
-      .get("/user/:userId")
+      .delete(`/user/${newUser.id}`)
       .send();
 
     expect(res).toBeDefined();
@@ -67,9 +76,9 @@ describe("GetOne user controller test", () => {
     expect(res.body.message).toEqual(
       "Error: Erro simulado no usecase"
     );
-    expect(getOneUsecaseSpy).toHaveBeenCalled();
+    expect(deleteUsecaseSpy).toHaveBeenCalled();
     expect(
-      getOneUsecaseSpy
+      deleteUsecaseSpy
     ).toHaveBeenCalledTimes(1);
   });
 
@@ -85,13 +94,13 @@ describe("GetOne user controller test", () => {
       "any_password"
     );
 
-    const createdUser =
+    const deletedUser =
       repository.create(newUser);
 
-    await repository.save(createdUser);
+    await repository.save(deletedUser);
 
     const res = await request(app)
-      .get(`/user/${createdUser.id}`)
+      .delete(`/user/${newUser.id}`)
       .send();
 
     expect(res).toBeDefined();
@@ -101,7 +110,7 @@ describe("GetOne user controller test", () => {
     expect(res.statusCode).toBe(200);
     expect(res).toHaveProperty("body");
     expect(res.body.message).toEqual(
-      "Usuario encontrado"
+      "Usuario excluido com sucesso"
     );
     expect(res.body.data).toBeDefined();
   });
