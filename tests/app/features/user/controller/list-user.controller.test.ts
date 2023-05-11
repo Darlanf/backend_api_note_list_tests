@@ -34,7 +34,6 @@ describe("List user controller test", () => {
     const res = await request(app)
       .get("/user")
       .send({});
-    console.log(res.body);
 
     expect(res).toBeDefined();
     expect(res).toHaveProperty("ok");
@@ -54,7 +53,6 @@ describe("List user controller test", () => {
     const res = await request(app)
       .get("/user")
       .send({});
-    console.log(res.body);
 
     expect(res).toBeDefined();
     expect(res).toHaveProperty("ok");

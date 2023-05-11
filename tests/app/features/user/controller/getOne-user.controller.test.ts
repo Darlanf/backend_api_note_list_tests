@@ -5,6 +5,7 @@ import { createApp } from "../../../../../src/main/config/express.config";
 import { GetOneUserUsecase } from "../../../../../src/app/features/user/usecases/getOne-user.usecase";
 import { User } from "../../../../../src/app/models/user.model";
 import { UserRepository } from "../../../../../src/app/features/user/repository/user.repository";
+import { UserEntity } from "../../../../../src/app/shared/database/entities/user.entity";
 
 describe("GetOne user controller test", () => {
   beforeAll(async () => {
@@ -17,18 +18,30 @@ describe("GetOne user controller test", () => {
     await RedisConnection.connection.quit();
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+    await TypeormConnection.connection
+      .getRepository(UserEntity)
+      .clear();
   });
 
   const app = createApp();
 
-  const user: User = new User(
-    "any_username",
-    "any_email",
-    "any_password"
-  );
+  test("deveria retornar erro 404 se o usuario não for encontrado", async () => {
+    const res = await request(app)
+      .get("/user/:userId")
+      .send({});
+
+    expect(res).toBeDefined();
+    expect(res).toHaveProperty("ok");
+    expect(res.ok).toBeFalsy();
+    expect(res).toHaveProperty("statusCode");
+    expect(res.statusCode).toBe(404);
+    expect(res.body.message).toEqual(
+      "Usuario nao encontrado"
+    );
+  });
 
   test("deveria retornar erro 500 quando o usecase gerar exceção", async () => {
     const getOneUsecaseSpy = jest
@@ -45,7 +58,6 @@ describe("GetOne user controller test", () => {
     const res = await request(app)
       .get("/user/:userId")
       .send({});
-    console.log(res.body);
 
     expect(res).toBeDefined();
     expect(res).toHaveProperty("ok");
@@ -62,19 +74,25 @@ describe("GetOne user controller test", () => {
   });
 
   test("deveria retornar sucesso (200) caso o usuario seja encontrado", async () => {
-    jest
-      .spyOn(
-        UserRepository.prototype,
-        "getUserById"
-      )
-      .mockResolvedValue(user);
+    const repository =
+      TypeormConnection.connection.getRepository(
+        UserEntity
+      );
 
-    const userId = user.id;
+    const newUser = new User(
+      "any_username",
+      "any_email",
+      "any_password"
+    );
+
+    const createdUser =
+      repository.create(newUser);
+
+    await repository.save(createdUser);
 
     const res = await request(app)
-      .get(`/user/${userId}`)
-      .send({});
-    console.log(res.body);
+      .get(`/user/${createdUser.id}`)
+      .send();
 
     expect(res).toBeDefined();
     expect(res).toHaveProperty("ok");

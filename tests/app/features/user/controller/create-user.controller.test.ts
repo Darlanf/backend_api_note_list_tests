@@ -5,6 +5,7 @@ import { createApp } from "./../../../../../src/main/config/express.config";
 import { UserRepository } from "../../../../../src/app/features/user/repository/user.repository";
 import { User } from "../../../../../src/app/models/user.model";
 import { CreateUserUsecase } from "../../../../../src/app/features/user/usecases/create-user.usecase";
+import { UserEntity } from "../../../../../src/app/shared/database/entities/user.entity";
 
 describe("Create user controller test", () => {
   beforeAll(async () => {
@@ -17,9 +18,12 @@ describe("Create user controller test", () => {
     await RedisConnection.connection.quit();
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+    await TypeormConnection.connection
+      .getRepository(UserEntity)
+      .clear();
   });
 
   const app = createApp();
@@ -130,23 +134,25 @@ describe("Create user controller test", () => {
   });
 
   test("deveria retornar erro 400 se o email ja estiver cadastrado", async () => {
-    const userRepositorySpy = jest
-      .spyOn(
-        UserRepository.prototype,
-        "getUserByEmail"
-      )
-      .mockResolvedValue(
-        new User(
-          "any_username",
-          "any_email",
-          "any_password"
-        )
+    const repository =
+      TypeormConnection.connection.getRepository(
+        UserEntity
       );
+
+    const user = repository.create({
+      email: "email_ja_cadastrado",
+      id: "any_id",
+      password: "any_password",
+      username: "any_username",
+    });
+
+    await repository.save(user);
+
     const res = await request(app)
       .post("/user")
       .send({
         username: "any_username",
-        email: "any_email",
+        email: "email_ja_cadastrado",
         password: "any_password",
       });
 
@@ -158,13 +164,6 @@ describe("Create user controller test", () => {
     expect(res.body.message).toEqual(
       "Email ja cadastrado"
     );
-    expect(userRepositorySpy).toHaveBeenCalled();
-    expect(
-      userRepositorySpy
-    ).toHaveBeenCalledWith("any_email");
-    expect(
-      userRepositorySpy
-    ).toHaveBeenCalledTimes(1);
   });
 
   test("deveria retornar erro 500 se a validação do email gerar exceção", async () => {
@@ -204,12 +203,6 @@ describe("Create user controller test", () => {
   });
 
   test("deveria retornar 201 quando o usuario for criado com sucesso", async () => {
-    const userRepositorySpy = jest
-      .spyOn(
-        UserRepository.prototype,
-        "getUserByEmail"
-      )
-      .mockResolvedValue(null);
     const res = await request(app)
       .post("/user")
       .send({
@@ -217,7 +210,6 @@ describe("Create user controller test", () => {
         email: "any_email",
         password: "any_password",
       });
-    console.log(res.body);
 
     expect(res).toBeDefined();
     expect(res).toHaveProperty("ok");
@@ -255,7 +247,6 @@ describe("Create user controller test", () => {
         email: "any_email",
         password: "any_password",
       });
-    console.log(res.body);
 
     expect(res).toBeDefined();
     expect(res).toHaveProperty("ok");
