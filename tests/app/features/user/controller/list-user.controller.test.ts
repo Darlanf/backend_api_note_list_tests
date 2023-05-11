@@ -22,7 +22,7 @@ describe("List user controller test", () => {
 
   const app = createApp();
 
-  test("deveria retornar 500 quando o usecase gerar uma exceção", async () => {
+  test("deveria retornar erro 500 quando o usecase gerar uma exceção", async () => {
     const listUsecaseSpy = jest
       .spyOn(ListUserUsecase.prototype, "execute")
       .mockImplementation(() => {
@@ -49,10 +49,10 @@ describe("List user controller test", () => {
     );
   });
 
-  test("deveria retornar sucesso (200) e uma lista de usuarios", async () => {
+  test("deveria retornar sucesso (200) se conseguir mostrar a listar dos usuarios", async () => {
     const res = await request(app)
       .get("/user")
-      .send({});
+      .send();
 
     expect(res).toBeDefined();
     expect(res).toHaveProperty("ok");

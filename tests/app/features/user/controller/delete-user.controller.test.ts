@@ -6,7 +6,7 @@ import { createApp } from "../../../../../src/main/config/express.config";
 import { User } from "../../../../../src/app/models/user.model";
 import { DeleteUserUsecase } from "../../../../../src/app/features/user/usecases/delete-user.usecase";
 
-describe("GetOne user controller test", () => {
+describe("Delete user controller test", () => {
   beforeAll(async () => {
     await TypeormConnection.init();
     await RedisConnection.connect();
@@ -47,7 +47,7 @@ describe("GetOne user controller test", () => {
     );
   });
 
-  test("deveria retornar 500 se o usecase gerar exceção", async () => {
+  test("deveria retornar erro 500 se o usecase gerar exceção", async () => {
     const deleteUsecaseSpy = jest
       .spyOn(
         DeleteUserUsecase.prototype,
@@ -82,7 +82,7 @@ describe("GetOne user controller test", () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  test("deveria retornar sucesso (200) caso o usuario seja encontrado", async () => {
+  test("deveria retornar sucesso (200) caso o usuario seja deletado com sucesso", async () => {
     const repository =
       TypeormConnection.connection.getRepository(
         UserEntity

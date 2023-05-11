@@ -202,7 +202,7 @@ describe("Create user controller test", () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  test("deveria retornar 201 quando o usuario for criado com sucesso", async () => {
+  test("deveria retornar sucesso (201) quando o usuario for criado com sucesso", async () => {
     const res = await request(app)
       .post("/user")
       .send({
@@ -221,7 +221,7 @@ describe("Create user controller test", () => {
     );
   });
 
-  test("deveria retornar 500 quando usecase gerar uma exceção", async () => {
+  test("deveria retornar erro 500 quando usecase gerar uma exceção", async () => {
     jest
       .spyOn(
         UserRepository.prototype,
