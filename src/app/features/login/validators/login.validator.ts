@@ -38,12 +38,8 @@ export class LoginValidator {
       if (user === null) {
         return RequestError.invalidData(
           res,
-          "Usuario não cadastrado"
+          "Email incorreto ou não cadastrado"
         );
-      }
-
-      if (user.password !== password) {
-        return RequestError.forbidden(res);
       }
       next();
     } catch (error: any) {
