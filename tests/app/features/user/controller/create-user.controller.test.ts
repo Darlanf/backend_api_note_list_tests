@@ -4,6 +4,7 @@ import request from "supertest";
 import { createApp } from "./../../../../../src/main/config/express.config";
 import { UserRepository } from "../../../../../src/app/features/user/repository/user.repository";
 import { User } from "../../../../../src/app/models/user.model";
+import { CreateUserUsecase } from "../../../../../src/app/features/user/usecases/create-user.usecase";
 
 describe("Create user controller test", () => {
   beforeAll(async () => {
@@ -226,5 +227,54 @@ describe("Create user controller test", () => {
     expect(res.body.message).toEqual(
       "Usuario criado com sucesso"
     );
+  });
+
+  test("deveria retornar 500 quando usecase gerar uma exceção", async () => {
+    jest
+      .spyOn(
+        UserRepository.prototype,
+        "getUserByEmail"
+      )
+      .mockResolvedValue(null);
+
+    const createUsecaseSpy = jest
+      .spyOn(
+        CreateUserUsecase.prototype,
+        "execute"
+      )
+      .mockImplementation((_: any) => {
+        throw new Error(
+          "Erro simulado no usecase"
+        );
+      });
+
+    const res = await request(app)
+      .post("/user")
+      .send({
+        username: "any_name",
+        email: "any_email",
+        password: "any_password",
+      });
+    console.log(res.body);
+
+    expect(res).toBeDefined();
+    expect(res).toHaveProperty("ok");
+    expect(res.ok).toBeFalsy();
+    expect(res).toHaveProperty("statusCode");
+    expect(res.statusCode).toBe(500);
+    expect(res.body.message).toEqual(
+      "Error: Erro simulado no usecase"
+    );
+    expect(createUsecaseSpy).toHaveBeenCalled();
+    expect(createUsecaseSpy).toHaveBeenCalledWith(
+      {
+        email: "any_email",
+        password: "any_password",
+        username: "any_name",
+      }
+    );
+    expect(
+      createUsecaseSpy
+    ).toHaveBeenCalledTimes(1);
   });
 });
