@@ -13,7 +13,7 @@ if (databaseEnv.nodeEnv !== "dev") {
     "build/app/shared/database/migrations/**/*.js";
 }
 
-export default new DataSource({
+let source = new DataSource({
   type: "postgres",
   host: databaseEnv.host,
   username: databaseEnv.username,
@@ -27,3 +27,17 @@ export default new DataSource({
   entities: [entities],
   migrations: [migrations],
 });
+
+if (databaseEnv.apiEnv === "test") {
+  source = new DataSource({
+    type: "sqlite",
+    database: "database.sqlite3",
+    synchronize: false,
+    entities: [entities],
+    migrations: [
+      "tests/app/shared/database/migrations/**/*.ts",
+    ],
+  });
+}
+
+export default source;

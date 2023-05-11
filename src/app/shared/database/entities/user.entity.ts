@@ -26,13 +26,13 @@ export class UserEntity {
 
   @CreateDateColumn({
     name: "created_at",
-    type: "timestamp",
+    // type: "timestamp",
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     name: "updated_at",
-    type: "timestamp",
+    // type: "timestamp",
   })
   updatedAt: Date;
 

@@ -4,3 +4,4 @@ build
 coverage
 *.txt
 middlewares
+*.sqlite3   

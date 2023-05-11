@@ -40,13 +40,13 @@ export class NoteEntity {
 
   @CreateDateColumn({
     name: "created_at",
-    type: "timestamp",
+    // type: "timestamp",
   })
   CreatedAt: Date;
 
   @UpdateDateColumn({
     name: "updated_at",
-    type: "timestamp",
+    // type: "timestamp",
   })
   updatedAt: Date;
 }
