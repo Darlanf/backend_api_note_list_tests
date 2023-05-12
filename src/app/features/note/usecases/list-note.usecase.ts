@@ -40,7 +40,7 @@ export class ListNoteUsecase {
     const database = new NoteRepository();
     let noteList = await database.list(
       data.userId,
-      data.title ? String(data.title) : undefined,
+      data.title,
       filed
     );
 
@@ -58,7 +58,7 @@ export class ListNoteUsecase {
     };
   }
 
-  private isFiled(filed: string | undefined) {
+  public isFiled(filed: string | undefined) {
     switch (filed) {
       case "":
         return undefined;
@@ -73,10 +73,10 @@ export class ListNoteUsecase {
     }
   }
 
-  private getKey(
+  public getKey(
     userId: string,
-    title?: any,
-    filed?: any
+    title?: string,
+    filed?: string
   ): string {
     if (
       title !== undefined &&
