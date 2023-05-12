@@ -57,9 +57,6 @@ describe("Delete note controller test", () => {
     const newUser = userRepository.create(user);
     await userRepository.save(newUser);
 
-    // const newNote = noteRepository.create(note);
-    // await noteRepository.save(newNote);
-
     const res = await request(app).delete(
       `/user/${newUser.id}/notes/notaId`
     );

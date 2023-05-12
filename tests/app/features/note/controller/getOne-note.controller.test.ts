@@ -43,8 +43,6 @@ describe("GetOne note controller tests", () => {
     "any_description"
   );
 
-  //   "/user/:userId/notes/:noteId",
-
   test("deveria retornar erro 404 se o usuario nao for encontrado", async () => {
     const res = await request(app)
       .get("/user/userId/notes/noteId")
