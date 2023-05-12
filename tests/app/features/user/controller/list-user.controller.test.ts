@@ -1,4 +1,6 @@
 import { ListUserUsecase } from "../../../../../src/app/features/user/usecases/list-user.usecase";
+import { User } from "../../../../../src/app/models/user.model";
+import { UserEntity } from "../../../../../src/app/shared/database/entities/user.entity";
 import { createApp } from "../../../../../src/main/config/express.config";
 import { RedisConnection } from "../../../../../src/main/database/redis.connection";
 import { TypeormConnection } from "../../../../../src/main/database/typeorm.connection";
@@ -15,9 +17,12 @@ describe("List user controller test", () => {
     await RedisConnection.connection.quit();
   });
 
-  beforeEach(() => {
+  afterEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
+    await TypeormConnection.connection
+      .getRepository(UserEntity)
+      .clear();
   });
 
   const app = createApp();
@@ -50,6 +55,29 @@ describe("List user controller test", () => {
   });
 
   test("deveria retornar sucesso (200) se conseguir mostrar a listar dos usuarios", async () => {
+    const userRepository =
+      TypeormConnection.connection.getRepository(
+        UserEntity
+      );
+
+    const newUser = userRepository.create(
+      new User(
+        "any_name",
+        "any_email",
+        "any_password"
+      )
+    );
+    await userRepository.save(newUser);
+
+    const anotherUser = userRepository.create(
+      new User(
+        "another_name",
+        "another_email",
+        "another_password"
+      )
+    );
+    await userRepository.save(anotherUser);
+
     const res = await request(app)
       .get("/user")
       .send();
@@ -64,5 +92,6 @@ describe("List user controller test", () => {
     );
     expect(res.body).toHaveProperty("data");
     expect(res.body.data).toBeDefined();
+    expect(res.body.data).toHaveLength(2);
   });
 });
