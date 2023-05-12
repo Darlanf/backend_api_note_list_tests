@@ -43,8 +43,6 @@ describe("Update notes controller tests", () => {
     "any_description"
   );
 
-  //   "/user/:userId/notes/:noteId",
-
   test("deveria retornar erro 400 se o titulo for menor que 3 caracteres", async () => {
     const res = await request(app)
       .put("/user/userId/notes/noteId")

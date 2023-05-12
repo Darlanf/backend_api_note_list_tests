@@ -97,7 +97,6 @@ describe("List notes controller tests", () => {
       .get(`/user/${newUser.id}/notes`)
       .query({ filed: "false" })
       .send();
-    console.log(res.body.data);
 
     expect(res).toBeDefined();
     expect(res).toHaveProperty("ok");
