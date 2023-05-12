@@ -62,7 +62,8 @@ describe("list notes usecase unit tests", () => {
     expect(result).toHaveProperty("data");
     expect(result.data).toHaveLength(3);
   });
-  test("deveria converter os valores de de filed", async () => {
+
+  test("deveria converter os valores de filed", async () => {
     const sut = makeSut();
 
     const isUndefined = sut.isFiled(undefined);
@@ -74,5 +75,44 @@ describe("list notes usecase unit tests", () => {
     expect(isTrue).toBeTruthy();
     expect(isFalse).toBeFalsy();
     expect(isEmpty).toBeUndefined();
+  });
+
+  test("deveria retornar os valores de getKey", async () => {
+    const sut = makeSut();
+
+    const undefinedKeys = sut.getKey(
+      "any_id",
+      undefined,
+      undefined
+    );
+
+    const haveTitle = sut.getKey(
+      "any_id",
+      "any_title",
+      undefined
+    );
+    const haveFiled = sut.getKey(
+      "any_id",
+      undefined,
+      "true"
+    );
+    const haveTitleAndFiled = sut.getKey(
+      "any_id",
+      "any_title",
+      "false"
+    );
+
+    expect(undefinedKeys).toMatch(
+      "listaDeNotas:any_id::"
+    );
+    expect(haveTitle).toMatch(
+      "listaDeNotas:any_id:any_title:"
+    );
+    expect(haveFiled).toMatch(
+      "listaDeNotas:any_id::true"
+    );
+    expect(haveTitleAndFiled).toMatch(
+      "listaDeNotas:any_id:any_title:false"
+    );
   });
 });
