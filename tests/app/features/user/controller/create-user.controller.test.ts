@@ -18,7 +18,7 @@ describe("Create user controller test", () => {
     await RedisConnection.connection.quit();
   });
 
-  beforeEach(async () => {
+  afterEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
     await TypeormConnection.connection

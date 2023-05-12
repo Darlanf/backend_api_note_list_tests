@@ -17,7 +17,7 @@ describe("delete note usecase unit tests", () => {
     await RedisConnection.connection.quit();
   });
 
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
   });
