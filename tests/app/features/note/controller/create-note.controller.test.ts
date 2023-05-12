@@ -8,7 +8,7 @@ import { User } from "../../../../../src/app/models/user.model";
 import { Note } from "../../../../../src/app/models/note.model";
 import { CreateNoteUsecase } from "../../../../../src/app/features/note/usecases/create-note.usecase";
 
-describe("Create user controller test", () => {
+describe("Create note controller test", () => {
   beforeAll(async () => {
     await TypeormConnection.init();
     await RedisConnection.connect();
