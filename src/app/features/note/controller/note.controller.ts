@@ -16,7 +16,12 @@ export class NoteController {
   ) {
     try {
       const { userId } = req.params;
-      const { title, filed } = req.query;
+      const title = req.query.title as
+        | string
+        | undefined;
+      const filed = req.query.filed as
+        | string
+        | undefined;
 
       const result =
         await new ListNoteUsecase().execute({

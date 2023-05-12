@@ -5,19 +5,22 @@ import { NoteRepository } from "../repository/note.repository";
 
 interface ListNoteParams {
   userId: string;
-  title?: any;
-  filed?: any;
+  title?: string;
+  filed?: string;
 }
 
 export class ListNoteUsecase {
   public async execute(
     data: ListNoteParams
   ): Promise<Return> {
-    const cachedNoteList = await this.getCache(
+    const cacheRepository = new CacheRepository();
+    const cacheKey = this.getKey(
       data.userId,
       data.title,
       data.filed
     );
+    const cachedNoteList =
+      await cacheRepository.get<Note[]>(cacheKey);
 
     if (
       cachedNoteList !== null &&
@@ -41,11 +44,10 @@ export class ListNoteUsecase {
       filed
     );
 
-    await this.saveCache(
-      data.userId,
+    await cacheRepository.setEx(
+      cacheKey,
       noteList,
-      data.title,
-      data.filed
+      300
     );
 
     return {
@@ -56,7 +58,7 @@ export class ListNoteUsecase {
     };
   }
 
-  private isFiled(filed: string) {
+  private isFiled(filed: string | undefined) {
     switch (filed) {
       case "":
         return undefined;
@@ -71,92 +73,27 @@ export class ListNoteUsecase {
     }
   }
 
-  private async saveCache(
-    userId: string,
-    noteList: Note[],
-    title?: any,
-    filed?: any
-  ) {
-    const cacheRepository = new CacheRepository();
-
-    if (
-      (title === undefined || title === "") &&
-      (filed === undefined || filed === "")
-    ) {
-      await cacheRepository.setEx(
-        `listaDeNotas:${userId}::`,
-        noteList,
-        300
-      );
-    } else if (
-      title !== undefined &&
-      (filed === undefined || filed === "")
-    ) {
-      await cacheRepository.setEx(
-        `listaDeNotas:${userId}:${title}:`,
-        noteList,
-        300
-      );
-    } else if (
-      (title === undefined || title === "") &&
-      filed !== undefined
-    ) {
-      await cacheRepository.setEx(
-        `listaDeNotas:${userId}::${filed}`,
-        noteList,
-        300
-      );
-    } else if (
-      title !== undefined &&
-      filed !== undefined
-    ) {
-      await cacheRepository.setEx(
-        `listaDeNotas:${userId}:${title}:${filed}`,
-        noteList,
-        300
-      );
-    }
-  }
-
-  private async getCache(
+  private getKey(
     userId: string,
     title?: any,
     filed?: any
-  ) {
-    const cacheRepository = new CacheRepository();
-    let cachedNoteList;
-
+  ): string {
     if (
-      (title === undefined || title === "") &&
-      (filed === undefined || filed === "")
-    ) {
-      cachedNoteList = await cacheRepository.get<
-        Note[]
-      >(`listaDeNotas:${userId}::`);
-    } else if (
       title !== undefined &&
       (filed === undefined || filed === "")
     ) {
-      cachedNoteList = await cacheRepository.get<
-        Note[]
-      >(`listaDeNotas:${userId}:${title}:`);
+      return `listaDeNotas:${userId}:${title}:`;
     } else if (
       (title === undefined || title === "") &&
       filed !== undefined
     ) {
-      cachedNoteList = await cacheRepository.get<
-        Note[]
-      >(`listaDeNotas:${userId}::${filed}`);
+      return `listaDeNotas:${userId}::${filed}`;
     } else if (
       title !== undefined &&
       filed !== undefined
     ) {
-      cachedNoteList = await cacheRepository.get<
-        Note[]
-      >(
-        `listaDeNotas:${userId}:${title}:${filed}`
-      );
+      return `listaDeNotas:${userId}:${title}:${filed}`;
     }
-    return cachedNoteList;
+    return `listaDeNotas:${userId}::`;
   }
 }
